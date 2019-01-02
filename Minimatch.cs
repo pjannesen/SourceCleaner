@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -308,8 +308,7 @@ namespace Minimatch
                     member += "\\" + c;
                 }
                 else {
-                    switch (c)
-                    {
+                    switch (c) {
                         case '\\':
                             escaping = true;
                             continue;
@@ -467,8 +466,7 @@ namespace Minimatch
                 if (stateChar != null) {
                     // we had some state-tracking character
                     // that wasn't consumed by this pass.
-                    switch (stateChar)
-                    {
+                    switch (stateChar) {
                         case '*':
                             re += star;
                             hasMagic = true;
@@ -498,8 +496,7 @@ namespace Minimatch
                     continue;
                 }
 
-                switch (c)
-                {
+                switch (c) {
                     case '/':
                         // completely not allowed, even escaped.
                         // Should already be path-split by now.
@@ -569,8 +566,7 @@ namespace Minimatch
                         plType = patternListStack.Pop().Type;
                         // negation is (?:(?!js)[^/]*)
                         // The others are (?:<pattern>)<type>
-                        switch (plType)
-                        {
+                        switch (plType) {
                             case '!':
                                 re += "[^/]*?)";
                                 break;
@@ -702,8 +698,7 @@ namespace Minimatch
             // only need to apply the nodot start if the re starts with
             // something that could conceivably capture a dot
             var addPatternStart = false;
-            switch (re[0])
-            {
+            switch (re[0]) {
                 case '.':
                 case '[':
                 case '(': addPatternStart = true; break;

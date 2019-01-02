@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Jannesen.Tools.SourceCleaner
 {
@@ -11,7 +11,18 @@ namespace Jannesen.Tools.SourceCleaner
                 var cleaner  = new SourceCleaner();
 
                 foreach(var arg in args) {
-                    globbing.Pattern(arg);
+                    if (arg.StartsWith("--")) {
+                        var i = arg.IndexOf('=', 2);
+                        if (i > 0) {
+                            cleaner.SetOption(arg.Substring(2, i-2), arg.Substring(i+1));
+                        }
+                        else {
+                            cleaner.SetOption(arg.Substring(2), null);
+                        }
+                    }
+                    else {
+                        globbing.Pattern(arg);
+                    }
                 }
 
                 cleaner.Run(globbing);

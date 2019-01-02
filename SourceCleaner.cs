@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -13,6 +13,7 @@ namespace Jannesen.Tools.SourceCleaner
                                                                           @"|else"                  +
                                                                           @"|for(\s|\().*\)"        +
                                                                           @"|foreach(\s|\().*\)"    +
+                                                                          @"|switch(\s|\().*\)"     +
                                                                           @"|while(\s|\().*\)"      +
                                                                           @"|do"                    +
                                                                           @"|try"                   +
@@ -27,9 +28,10 @@ namespace Jannesen.Tools.SourceCleaner
         public          bool            TrimTralingSpace;
         public          string          EOL;
         public          bool            BlockReformat;
+        public          Encoding        Encoding;
 
         public          byte[]          SrcData;
-        public          Encoding        Encoding;
+        public          Encoding        SrcEncoding;
         public          List<string>    Lines;
 
         public                          SourceCleaner() {
@@ -40,6 +42,33 @@ namespace Jannesen.Tools.SourceCleaner
             BlockReformat    = false;
         }
 
+        public          void            SetOption(string name, string value)
+        {
+            try {
+                switch(name) {
+                case "block-reformat":
+                    BlockReformat = bool.Parse(value);
+                    break;
+                case "encoding":
+                    switch(value) {
+                    case null:          Encoding = null;                        break;
+                    case "utf-8":       Encoding = new UTF8Encoding(false);     break;
+                    case "utf-8-bom":   Encoding = new UTF8Encoding(true);      break;
+                    default:            Encoding = Encoding.GetEncoding(value); break;
+                    }
+                    break;
+
+                default:
+                    throw new Exception("Unknown option '" + name + "'.");
+                }
+            }
+            catch(Exception e) {
+                if (e.GetType() == typeof(Exception))
+                    throw e;
+
+                throw new FormatException("Invalid BlockReformat option value'" + value + "'.");
+            }
+        }
         public          void            Run(Globbing globber)
         {
             foreach(var filename in globber.Files)
@@ -50,9 +79,9 @@ namespace Jannesen.Tools.SourceCleaner
         public          void            Run(string filename)
         {
             try {
-                SrcData  = null;
-                Encoding = null;
-                Lines    = null;
+                SrcData     = null;
+                SrcEncoding = null;
+                Lines       = null;
 
                 _readFile(filename);
 
@@ -159,7 +188,7 @@ namespace Jannesen.Tools.SourceCleaner
             }
 
             using (var streamReader = new StreamReader(new MemoryStream(SrcData, false))) {
-                Encoding = streamReader.CurrentEncoding;
+                SrcEncoding = streamReader.CurrentEncoding;
                 Lines = new List<string>();
                 string line;
 
@@ -172,7 +201,7 @@ namespace Jannesen.Tools.SourceCleaner
         {
             using (var memoryStream = new MemoryStream())
             {
-                using (StreamWriter streamWriter = new StreamWriter(memoryStream, Encoding, 512, true))
+                using (StreamWriter streamWriter = new StreamWriter(memoryStream, Encoding ?? SrcEncoding, 512, true))
                 {
                     foreach(var line in Lines) {
                         streamWriter.Write(line);
