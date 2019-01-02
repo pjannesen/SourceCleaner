@@ -7,20 +7,34 @@ namespace Jannesen.Tools.SourceCleaner
         static      void         Main(string[] args)
         {
             try {
-                var globbing = new Globbing(System.IO.Directory.GetCurrentDirectory());
+                var globbing = (Globbing)null;
                 var cleaner  = new SourceCleaner();
 
                 foreach(var arg in args) {
                     if (arg.StartsWith("--")) {
                         var i = arg.IndexOf('=', 2);
-                        if (i > 0) {
-                            cleaner.SetOption(arg.Substring(2, i-2), arg.Substring(i+1));
-                        }
-                        else {
-                            cleaner.SetOption(arg.Substring(2), null);
+                        var name  = (i > 0) ? arg.Substring(2, i-2) : arg.Substring(2);
+                        var value = (i > 0) ? arg.Substring(i+1) : null;
+
+                        switch(name) {
+                        case "path":
+                            if (globbing != null) {
+                                cleaner.Run(globbing);
+                            }
+
+                            globbing = value != null ? new Globbing(System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), value)) : null;
+                            break;
+
+                        default:
+                            cleaner.SetOption(name, value);
+                            break;
                         }
                     }
                     else {
+                        if (globbing == null) {
+                            globbing = new Globbing(System.IO.Directory.GetCurrentDirectory());
+                        }
+
                         globbing.Pattern(arg);
                     }
                 }
