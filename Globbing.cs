@@ -27,6 +27,9 @@ namespace Jannesen.Tools.SourceCleaner
             if (!cwd.EndsWith("/"))
                 cwd += "/";
 
+            if (!Directory.Exists(cwd))
+                throw new DirectoryNotFoundException("Unknown directory '" + cwd + "'.");
+
             _cwd   = cwd;
             _files = new SortedDictionary<string, string>();
         }

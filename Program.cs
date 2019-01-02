@@ -18,6 +18,9 @@ namespace Jannesen.Tools.SourceCleaner
 
                         switch(name) {
                         case "path":
+                            if (String.IsNullOrWhiteSpace(value))
+                                throw new FormatException("Invalid path value");
+
                             if (globbing != null) {
                                 cleaner.Run(globbing);
                             }
