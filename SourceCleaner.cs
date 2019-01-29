@@ -15,6 +15,7 @@ namespace Jannesen.Tools.SourceCleaner
                                                                           @"|foreach(\s|\().*\)"    +
                                                                           @"|switch(\s|\().*\)"     +
                                                                           @"|while(\s|\().*\)"      +
+                                                                          @"|lock(\s|\().*\)"       +
                                                                           @"|do"                    +
                                                                           @"|try"                   +
                                                                           @"|catch(\s|\().*\)"      +
