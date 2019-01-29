@@ -9,16 +9,17 @@ namespace Jannesen.Tools.SourceCleaner
     class SourceCleaner
     {
         public static   Regex           _beginblock       = new Regex(@"^\s+{\s*$", RegexOptions.Singleline | RegexOptions.CultureInvariant | RegexOptions.Compiled);
-        public static   Regex           _allowappendblock = new Regex(@"^\s+(if(\s|\().*\)"         +
+        public static   Regex           _allowappendblock = new Regex(@"^\s+(if\s*\(.*\)"         +
                                                                           @"|else"                  +
-                                                                          @"|for(\s|\().*\)"        +
-                                                                          @"|foreach(\s|\().*\)"    +
-                                                                          @"|switch(\s|\().*\)"     +
-                                                                          @"|while(\s|\().*\)"      +
-                                                                          @"|lock(\s|\().*\)"       +
+                                                                          @"|for\s*\(.*\)"        +
+                                                                          @"|foreach\s*\(.*\)"    +
+                                                                          @"|switch\s*\(.*\)"     +
+                                                                          @"|case\s*.*:"     +
+                                                                          @"|while\s*\(.*\)"      +
+                                                                          @"|lock\s*\(.*\)"       +
                                                                           @"|do"                    +
                                                                           @"|try"                   +
-                                                                          @"|catch(\s|\().*\)"      +
+                                                                          @"|catch\s*\(.*\)"      +
                                                                           @"|finally"               +
                                                                           @"|get"                   +
                                                                           @"|set"                   +
