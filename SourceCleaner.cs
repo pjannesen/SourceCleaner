@@ -136,7 +136,7 @@ namespace Jannesen.Tools.SourceCleaner
                 }
             }
         }
-        private         string          _removeTralingSpace(string line)
+        private static  string          _removeTralingSpace(string line)
         {
             int i = line.Length;
 
@@ -180,8 +180,7 @@ namespace Jannesen.Tools.SourceCleaner
 
         private         void            _readFile(string filename)
         {
-            using (var file = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
+            using (var file = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read)) {
                 int length = (int)file.Length;
                 SrcData = new byte[length];
 
@@ -201,10 +200,8 @@ namespace Jannesen.Tools.SourceCleaner
         }
         private         void            _writeFile(string filename)
         {
-            using (var memoryStream = new MemoryStream())
-            {
-                using (StreamWriter streamWriter = new StreamWriter(memoryStream, Encoding ?? SrcEncoding, 512, true))
-                {
+            using (var memoryStream = new MemoryStream()) {
+                using (StreamWriter streamWriter = new StreamWriter(memoryStream, Encoding ?? SrcEncoding, 512, true)) {
                     foreach(var line in Lines) {
                         streamWriter.Write(line);
                         streamWriter.Write(EOL);

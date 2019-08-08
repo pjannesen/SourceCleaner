@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
+#pragma warning disable CA1062
+#pragma warning disable CA1305
+#pragma warning disable CA1507
+#pragma warning disable CA1820
+
 namespace Minimatch
 {
     ///<summary>Contains options that control how Minimatch matches strings.</summary>

@@ -11,7 +11,7 @@ namespace Jannesen.Tools.SourceCleaner
                 var cleaner  = new SourceCleaner();
 
                 foreach(var arg in args) {
-                    if (arg.StartsWith("--")) {
+                    if (arg.StartsWith("--", StringComparison.Ordinal)) {
                         var i = arg.IndexOf('=', 2);
                         var name  = (i > 0) ? arg.Substring(2, i-2) : arg.Substring(2);
                         var value = (i > 0) ? arg.Substring(i+1) : null;

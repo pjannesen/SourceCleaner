@@ -7,8 +7,8 @@ namespace Jannesen.Tools.SourceCleaner
 {
     class Globbing
     {
-        private             string                              _cwd;
-        private             SortedDictionary<string, string>    _files;
+        private readonly    string                              _cwd;
+        private readonly    SortedDictionary<string, string>    _files;
 
         public              IReadOnlyCollection<string>         Files
         {
@@ -24,7 +24,7 @@ namespace Jannesen.Tools.SourceCleaner
             if (cwd.Length < 3 || cwd[1] != ':' || cwd[2] != '/')
                 throw new FormatException("Invalid root.");
 
-            if (!cwd.EndsWith("/"))
+            if (!cwd.EndsWith("/", StringComparison.Ordinal))
                 cwd += "/";
 
             if (!Directory.Exists(cwd))
@@ -35,7 +35,7 @@ namespace Jannesen.Tools.SourceCleaner
         }
         public              void                                Pattern(string pattern)
         {
-            bool    not = pattern.StartsWith("!");
+            bool    not = pattern.StartsWith("!", StringComparison.Ordinal);
 
             if (not)
                 pattern = pattern.Substring(1);
@@ -45,13 +45,13 @@ namespace Jannesen.Tools.SourceCleaner
             if (f < 0) {
                 if (!not) {
                     if (File.Exists(pattern.Replace('/', '\\'))) {
-                        var key = pattern.ToLower();
+                        var key = pattern.ToLowerInvariant();
                         if (!_files.ContainsKey(key))
                             _files.Add(key, pattern);
                     }
                 }
                 else {
-                    var key = pattern.ToLower();
+                    var key = pattern.ToLowerInvariant();
                     if (_files.ContainsKey(key))
                         _files.Remove(key);
                 }
@@ -66,16 +66,16 @@ namespace Jannesen.Tools.SourceCleaner
 
                 if (!not) {
                     foreach (var filename in Directory.EnumerateFiles(root.Replace('/', '\\'), "*", SearchOption.AllDirectories)) {
-                        var key = filename.Replace('\\', '/').ToLower();
+                        var key = filename.Replace('\\', '/').ToLowerInvariant();
                         if (!_files.ContainsKey(key) && matcher.IsMatch(key.Substring(f + 1)))
                             _files.Add(key, filename);
                     }
                 }
                 else {
-                    root = (root + '/').ToLower();
+                    root = (root + '/').ToLowerInvariant();
                     var toremove = new List<string>();
                     foreach(var key in _files.Keys) {
-                        if (key.StartsWith(root)) {
+                        if (key.StartsWith(root, StringComparison.Ordinal)) {
                             if (matcher.IsMatch(key.Substring(f + 1)))
                                 toremove.Add(key);
                         }
@@ -93,7 +93,7 @@ namespace Jannesen.Tools.SourceCleaner
         {
             pattern = pattern.Replace('\\', '/');
 
-            if (pattern.StartsWith("//"))
+            if (pattern.StartsWith("//", StringComparison.Ordinal))
                 return pattern; // UNC Path
 
             if (pattern.Length > 2 && pattern[1] == ':') {
@@ -103,11 +103,11 @@ namespace Jannesen.Tools.SourceCleaner
                 return pattern;  // Absolute path <drive>:/
             }
 
-            if (pattern.StartsWith("/"))
+            if (pattern.StartsWith("/", StringComparison.Ordinal))
                 return cwd.Substring(0,2) + pattern;
 
             for (;;) {
-                if (pattern.StartsWith("../")) {
+                if (pattern.StartsWith("../", StringComparison.Ordinal)) {
                     int i = cwd.LastIndexOf('/', cwd.Length - 1);
                     if (i < 0)
                         throw new FormatException("can't go below root.");
@@ -117,7 +117,7 @@ namespace Jannesen.Tools.SourceCleaner
                     continue;
                 }
 
-                if (pattern.StartsWith("./")) {
+                if (pattern.StartsWith("./", StringComparison.Ordinal)) {
                     pattern = pattern.Substring(2);
                     continue;
                 }
