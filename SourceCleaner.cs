@@ -26,16 +26,21 @@ namespace Jannesen.Tools.SourceCleaner
                                                                           @"|set"                   +
                                                                           @")$", RegexOptions.Singleline | RegexOptions.CultureInvariant | RegexOptions.Compiled);
 
+        public          bool            Silent;
+        public          bool            Optimize;
         public          int             InputTabSize;
         public          int             OutputTabSize;
         public          bool            TrimTralingSpace;
         public          string          EOL;
         public          bool            BlockReformat;
         public          Encoding        Encoding;
+        public          string          Version;
+        public          List<Regex>     VersionRegex;
 
         public          byte[]          SrcData;
         public          Encoding        SrcEncoding;
         public          List<string>    Lines;
+        public          bool            Changed;
 
         public                          SourceCleaner() {
             InputTabSize     = 4;
@@ -49,9 +54,18 @@ namespace Jannesen.Tools.SourceCleaner
         {
             try {
                 switch(name) {
-                case "block-reformat":
-                    BlockReformat = bool.Parse(value);
+                case "silent":
+                    Silent = (string.IsNullOrEmpty(value) ? true : bool.Parse(value));
                     break;
+
+                case "optimize":
+                    Optimize = (string.IsNullOrEmpty(value) ? true : bool.Parse(value));
+                    break;
+
+                case "block-reformat":
+                    BlockReformat = (string.IsNullOrEmpty(value) ? true : bool.Parse(value));
+                    break;
+
                 case "encoding":
                     switch(value) {
                     case null:          Encoding = null;                        break;
@@ -59,6 +73,17 @@ namespace Jannesen.Tools.SourceCleaner
                     case "utf-8-bom":   Encoding = new UTF8Encoding(true);      break;
                     default:            Encoding = Encoding.GetEncoding(value); break;
                     }
+                    break;
+
+                case "version":
+                    Version = value;
+                    break;
+
+                case "version-regex":
+                    if (VersionRegex == null) {
+                        VersionRegex = new List<Regex>();
+                    }
+                    VersionRegex.Add(new Regex(value, RegexOptions.Compiled | RegexOptions.Singleline));
                     break;
 
                 default:
@@ -69,7 +94,7 @@ namespace Jannesen.Tools.SourceCleaner
                 if (e.GetType() == typeof(Exception))
                     throw e;
 
-                throw new FormatException("Invalid BlockReformat option value'" + value + "'.");
+                throw new FormatException("Invalid '" + name + "' option value '" + value + "'.");
             }
         }
         public          void            Run(Globbing globber)
@@ -85,20 +110,29 @@ namespace Jannesen.Tools.SourceCleaner
                 SrcData     = null;
                 SrcEncoding = null;
                 Lines       = null;
+                Changed     = Optimize;
 
                 _readFile(filename);
 
-                if (TrimTralingSpace || InputTabSize > 0 || OutputTabSize > 0) {
-                    _tabOptimalisation();
-                }
+                if (Optimize) {
+                    if (TrimTralingSpace || InputTabSize > 0 || OutputTabSize > 0) {
+                        _tabOptimalisation();
+                    }
 
-                _removeTrailingEmptyLines();
+                    _removeTrailingEmptyLines();
+                }
 
                 if (BlockReformat) {
                     _beginBlockReformat();
                 }
 
-                _writeFile(filename);
+                if (Version != null && VersionRegex != null) {
+                    _replaceVersion();
+                }
+
+                if (Changed) {
+                    _writeFile(filename);
+                }
             }
             catch(Exception err) {
                 throw new Exception("Processing '" + filename + "' failed.", err);
@@ -134,6 +168,36 @@ namespace Jannesen.Tools.SourceCleaner
                     Lines[l - 1] = Lines[l - 1] + " {";
                     Lines.RemoveAt(l);
                     --l;
+                    Changed = true;
+                }
+            }
+        }
+        private         void            _replaceVersion()
+        {
+            for (int l = 1 ; l < Lines.Count ; ++l) {
+                var line = Lines[l];
+
+                foreach (var r in VersionRegex) {
+                    var m = r.Match(line);
+                    if (m.Success) {
+                        int cor = 0;
+                        foreach (Group g in m.Groups) {
+                            string v = null;
+                            switch (g.Name) {
+                            case "version":
+                                v = Version;
+                                break;
+                            }
+
+                            if (v != null) {
+                                line = line.Substring(0, g.Index + cor) + v + line.Substring(g.Index + cor + g.Length);
+                                cor += (v.Length - g.Length);
+                                Lines[l] = line;
+                                Changed = true;
+                            }
+                        }
+                        break;
+                    }
                 }
             }
         }
@@ -210,7 +274,9 @@ namespace Jannesen.Tools.SourceCleaner
                 }
 
                 if (!_compare(SrcData, memoryStream)) {
-                    Console.WriteLine(filename + ": cleaned.");
+                    if (!Silent) { 
+                        Console.WriteLine(filename + ": changed.");
+                    }
 
                     using (var file = new FileStream(filename, FileMode.Truncate, FileAccess.Write, FileShare.None))
                         file.Write(memoryStream.GetBuffer(), 0, (int)memoryStream.Length);
