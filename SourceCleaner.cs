@@ -174,7 +174,7 @@ namespace Jannesen.Tools.SourceCleaner
         }
         private         void            _replaceVersion()
         {
-            for (int l = 1 ; l < Lines.Count ; ++l) {
+            for (int l = 0 ; l < Lines.Count ; ++l) {
                 var line = Lines[l];
 
                 foreach (var r in VersionRegex) {
