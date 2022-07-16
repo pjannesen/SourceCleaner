@@ -92,7 +92,7 @@ namespace Jannesen.Tools.SourceCleaner
             }
             catch(Exception e) {
                 if (e.GetType() == typeof(Exception))
-                    throw e;
+                    throw;
 
                 throw new FormatException("Invalid '" + name + "' option value '" + value + "'.");
             }
