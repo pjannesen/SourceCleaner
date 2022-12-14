@@ -377,7 +377,7 @@ namespace Minimatch
             return BraceExpand(pattern.Substring(i), options).SelectMany(s1 => set.Select(s2 => s2 + s1));
         }
 
-        private class PatternListEntry
+        private sealed class PatternListEntry
         {
             public char Type { get; set; }
             public int Start { get; set; }
@@ -394,7 +394,7 @@ namespace Minimatch
 
             public abstract bool Match(string input, Options options);
         }
-        class LiteralItem : ParseItem
+        private sealed class LiteralItem : ParseItem
         {
             public LiteralItem(string source) { Source = source; }
             public override string RegexSource(Options options) { return Regex.Escape(Source); }
@@ -403,7 +403,7 @@ namespace Minimatch
                 return input.Equals(Source, options.NoCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
             }
         }
-        class MagicItem : ParseItem
+        private sealed class MagicItem : ParseItem
         {
             public MagicItem(string source, Options options)
             {
@@ -418,7 +418,7 @@ namespace Minimatch
                 return regex.Value.IsMatch(input);
             }
         }
-        class GlobStar : ParseItem
+        private sealed class GlobStar : ParseItem
         {
             private GlobStar() { }
             public static readonly ParseItem Instance = new GlobStar();

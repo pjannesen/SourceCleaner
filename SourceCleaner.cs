@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace Jannesen.Tools.SourceCleaner
 {
-    class SourceCleaner
+    internal sealed class SourceCleaner
     {
         public static   Regex           _beginblock       = new Regex(@"^\s+{\s*$", RegexOptions.Singleline | RegexOptions.CultureInvariant | RegexOptions.Compiled);
         public static   Regex           _allowappendblock = new Regex(@"^\s+(if\s*\(.*\)"           +

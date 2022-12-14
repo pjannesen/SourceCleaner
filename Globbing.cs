@@ -5,7 +5,7 @@ using Minimatch;
 
 namespace Jannesen.Tools.SourceCleaner
 {
-    class Globbing
+    internal sealed class Globbing
     {
         private readonly    string                              _cwd;
         private readonly    SortedDictionary<string, string>    _files;

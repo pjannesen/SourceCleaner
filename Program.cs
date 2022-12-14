@@ -2,7 +2,7 @@
 
 namespace Jannesen.Tools.SourceCleaner
 {
-    class Program
+    public sealed class Program
     {
         static      void         Main(string[] args)
         {
