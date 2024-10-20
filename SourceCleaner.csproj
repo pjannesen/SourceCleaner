@@ -1,34 +1,53 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <RootNamespace>Jannesen.Tools.SourceCleaner</RootNamespace>
-    <AssemblyName>SourceCleaner</AssemblyName>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net48</TargetFramework>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <AutoGenerateBindingRedirects>False</AutoGenerateBindingRedirects>
-    <EnableNETAnalyzers>true</EnableNETAnalyzers>
-    <AnalysisLevel>latest</AnalysisLevel>
-    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
-    <WarningLevel>4</WarningLevel>
-    <Company>Jannesen B.V.</Company>
-    <Version>1.10.00.001</Version>
-    <Authors>Peter Jannesen</Authors>
-  </PropertyGroup>
+    <PropertyGroup>
+        <AssemblyName>SourceCleaner</AssemblyName>
+        <RootNamespace>Jannesen.Tools.SourceCleaner</RootNamespace>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net80</TargetFramework>
+        <Platforms>x64</Platforms>
+        <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+        <InvariantGlobalization>true</InvariantGlobalization>
 
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-  </PropertyGroup>
+        <Nullable>disable</Nullable>
 
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-  </PropertyGroup>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+        <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+
+<!--
+        <SelfContained>true</SelfContained>
+        <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+        <PublishTrimmed>true</PublishTrimmed>
+        <PublishAot>true</PublishAot>
+-->
+        
+        <Company>Jannesen B.V.</Company>
+        <Version>1.11.00.000</Version>
+        <Authors>Peter Jannesen</Authors>
+    </PropertyGroup>
+<!--
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <EnableNETAnalyzers>true</EnableNETAnalyzers>
+        <AnalysisLevel>latest</AnalysisLevel>
+        <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+        <WarningLevel>4</WarningLevel>
+    </PropertyGroup>
+-->
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+        <OutputPath>bin\</OutputPath>
+        <DefineConstants>DEBUG;TRACE</DefineConstants>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <DebugType>pdbonly</DebugType>
+        <Optimize>true</Optimize>
+        <OutputPath>bin\</OutputPath>
+        <DefineConstants>TRACE</DefineConstants>
+    </PropertyGroup>
 
 </Project>

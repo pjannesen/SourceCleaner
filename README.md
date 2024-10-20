@@ -1,4 +1,4 @@
-﻿# SourceCleaner
+# SourceCleaner
 
 Simple command line tool to cleanup sources
 

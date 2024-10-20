@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Jannesen.Tools.SourceCleaner
 {
@@ -25,7 +25,7 @@ namespace Jannesen.Tools.SourceCleaner
                                 cleaner.Run(globbing);
                             }
 
-                            globbing = value != null ? new Globbing(System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), value)) : null;
+                            globbing = new Globbing(System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), value));
                             break;
 
                         default:

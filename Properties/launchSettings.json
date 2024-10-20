@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SourceCleaner": {
+      "commandName": "Project",
+      "commandLineArgs": "--optimize=true --encoding=utf8 --eol=nl --path=D:\\Tools\\SourceCleaner **\\*.cs **\\*.config **\\*.txt **\\*.md !bin\\**\\* !obj\\**\\*"
+    }
+  }
+}

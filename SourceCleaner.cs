@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -34,8 +34,6 @@ namespace Jannesen.Tools.SourceCleaner
         public          string          EOL;
         public          bool            BlockReformat;
         public          Encoding        Encoding;
-        public          string          Version;
-        public          List<Regex>     VersionRegex;
 
         public          byte[]          SrcData;
         public          Encoding        SrcEncoding;
@@ -69,21 +67,20 @@ namespace Jannesen.Tools.SourceCleaner
                 case "encoding":
                     switch(value) {
                     case null:          Encoding = null;                        break;
+                    case "utf8":        Encoding = new UTF8Encoding(false);     break;
                     case "utf-8":       Encoding = new UTF8Encoding(false);     break;
+                    case "utf8-bom":    Encoding = new UTF8Encoding(true);      break;
                     case "utf-8-bom":   Encoding = new UTF8Encoding(true);      break;
                     default:            Encoding = Encoding.GetEncoding(value); break;
                     }
                     break;
 
-                case "version":
-                    Version = value;
-                    break;
-
-                case "version-regex":
-                    if (VersionRegex == null) {
-                        VersionRegex = new List<Regex>();
+                case "eol":
+                    switch(value) {
+                    case "nl":          EOL = "\n";     break;
+                    case "crnl":        EOL = "\r\n";   break;
+                    default:            throw new Exception("Unknown EOL '" + value + "'.");
                     }
-                    VersionRegex.Add(new Regex(value, RegexOptions.Compiled | RegexOptions.Singleline));
                     break;
 
                 default:
@@ -103,7 +100,6 @@ namespace Jannesen.Tools.SourceCleaner
                 Run(filename);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         public          void            Run(string filename)
         {
             try {
@@ -124,10 +120,6 @@ namespace Jannesen.Tools.SourceCleaner
 
                 if (BlockReformat) {
                     _beginBlockReformat();
-                }
-
-                if (Version != null && VersionRegex != null) {
-                    _replaceVersion();
                 }
 
                 if (Changed) {
@@ -169,35 +161,6 @@ namespace Jannesen.Tools.SourceCleaner
                     Lines.RemoveAt(l);
                     --l;
                     Changed = true;
-                }
-            }
-        }
-        private         void            _replaceVersion()
-        {
-            for (int l = 0 ; l < Lines.Count ; ++l) {
-                var line = Lines[l];
-
-                foreach (var r in VersionRegex) {
-                    var m = r.Match(line);
-                    if (m.Success) {
-                        int cor = 0;
-                        foreach (Group g in m.Groups) {
-                            string v = null;
-                            switch (g.Name) {
-                            case "version":
-                                v = Version;
-                                break;
-                            }
-
-                            if (v != null) {
-                                line = line.Substring(0, g.Index + cor) + v + line.Substring(g.Index + cor + g.Length);
-                                cor += (v.Length - g.Length);
-                                Lines[l] = line;
-                                Changed = true;
-                            }
-                        }
-                        break;
-                    }
                 }
             }
         }
@@ -274,7 +237,7 @@ namespace Jannesen.Tools.SourceCleaner
                 }
 
                 if (!_compare(SrcData, memoryStream)) {
-                    if (!Silent) { 
+                    if (!Silent) {
                         Console.WriteLine(filename + ": changed.");
                     }
 
