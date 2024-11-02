@@ -2,18 +2,18 @@
     <PropertyGroup>
         <AssemblyName>SourceCleaner</AssemblyName>
         <RootNamespace>Jannesen.Tools.SourceCleaner</RootNamespace>
+        
         <OutputType>Exe</OutputType>
-        <TargetFramework>net80</TargetFramework>
+        <TargetFramework>net8</TargetFramework>
         <Platforms>x64</Platforms>
         <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+        
         <InvariantGlobalization>true</InvariantGlobalization>
-
         <Nullable>disable</Nullable>
 
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
         <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
         <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
-
 <!--
         <SelfContained>true</SelfContained>
         <RuntimeIdentifier>win-x64</RuntimeIdentifier>
@@ -34,7 +34,7 @@
         <WarningLevel>4</WarningLevel>
     </PropertyGroup>
 -->
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
         <DebugSymbols>true</DebugSymbols>
         <DebugType>full</DebugType>
         <Optimize>false</Optimize>
@@ -42,7 +42,7 @@
         <DefineConstants>DEBUG;TRACE</DefineConstants>
     </PropertyGroup>
 
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <DebugType>pdbonly</DebugType>
         <Optimize>true</Optimize>
