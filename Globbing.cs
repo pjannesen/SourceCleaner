@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Minimatch;
 
 namespace Jannesen.Tools.SourceCleaner
 {
@@ -62,7 +61,7 @@ namespace Jannesen.Tools.SourceCleaner
                     throw new FormatException("Can't deterim root.");
 
                 var root    = pattern.Substring(0, f);
-                var matcher = new Minimatch.Minimatcher(pattern.Substring(f + 1));
+                var matcher = new Minimatch.Minimatcher(pattern.Substring(f + 1), new Minimatch.Options() { Dot=true });
 
                 if (!not) {
                     foreach (var filename in Directory.EnumerateFiles(root.Replace('/', '\\'), "*", SearchOption.AllDirectories)) {
@@ -76,13 +75,15 @@ namespace Jannesen.Tools.SourceCleaner
                     var toremove = new List<string>();
                     foreach(var key in _files.Keys) {
                         if (key.StartsWith(root, StringComparison.Ordinal)) {
-                            if (matcher.IsMatch(key.Substring(f + 1)))
+                            if (matcher.IsMatch(key.Substring(f + 1))) {
                                 toremove.Add(key);
+                            }
                         }
                     }
 
-                    foreach(var key in toremove)
+                    foreach(var key in toremove) {
                         _files.Remove(key);
+                    }
                 }
             }
 
@@ -91,7 +92,7 @@ namespace Jannesen.Tools.SourceCleaner
 
         private static      string                              _absolutePattern(string cwd, string pattern)
         {
-            pattern = pattern.Replace('\\', '/');
+            pattern = pattern.Replace('\\', '/').ToLowerInvariant();
 
             if (pattern.StartsWith("//", StringComparison.Ordinal))
                 return pattern; // UNC Path

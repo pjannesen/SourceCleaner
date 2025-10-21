@@ -2,7 +2,8 @@
   "profiles": {
     "SourceCleaner": {
       "commandName": "Project",
-      "commandLineArgs": "--optimize=true --encoding=utf8-bom --eol=nl --path=D:\\GT\\TAS-TASKSERVER **\\*.cs **\\*.config **\\*.txt **\\*.md !**\\bin\\**\\* !**\\obj\\**\\* !output\\**\\*"
+      "commandLineArgs": "--dryrun=true --optimize=true --encoding=ascii    --eol=nl **\\.editorconfig **\\.gitattributes **\\.gitignore **\\LICENSE **\\*.cmd !contrib\\node_modules\\**\\* !contrib\\jannesen\\typescript\\**\\*",
+      "workingDirectory": "D:\\GT-803\\TAS"
     }
   }
 }

@@ -34,6 +34,7 @@ namespace Jannesen.Tools.SourceCleaner
         public          string          EOL;
         public          bool            BlockReformat;
         public          Encoding        Encoding;
+        public          bool            DryRun;
 
         public          byte[]          SrcData;
         public          Encoding        SrcEncoding;
@@ -81,6 +82,10 @@ namespace Jannesen.Tools.SourceCleaner
                     case "crnl":        EOL = "\r\n";   break;
                     default:            throw new Exception("Unknown EOL '" + value + "'.");
                     }
+                    break;
+
+                case "dryrun":
+                    DryRun = (string.IsNullOrEmpty(value) ? true : bool.Parse(value));
                     break;
 
                 default:
@@ -241,8 +246,10 @@ namespace Jannesen.Tools.SourceCleaner
                         Console.WriteLine(filename + ": changed.");
                     }
 
-                    using (var file = new FileStream(filename, FileMode.Truncate, FileAccess.Write, FileShare.None))
-                        file.Write(memoryStream.GetBuffer(), 0, (int)memoryStream.Length);
+                    if (!DryRun) {
+                        using (var file = new FileStream(filename, FileMode.Truncate, FileAccess.Write, FileShare.None))
+                            file.Write(memoryStream.GetBuffer(), 0, (int)memoryStream.Length);
+                    }
                 }
             }
         }
