@@ -1,31 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
+        <OutputType>Exe</OutputType>
         <AssemblyName>SourceCleaner</AssemblyName>
         <RootNamespace>Jannesen.Tools.SourceCleaner</RootNamespace>
         
-        <OutputType>Exe</OutputType>
-        <TargetFramework>net8</TargetFramework>
-        <Platforms>x64</Platforms>
-        <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+        <TargetFramework>net10.00</TargetFramework>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <AutoGenerateBindingRedirects>False</AutoGenerateBindingRedirects>
         
         <InvariantGlobalization>true</InvariantGlobalization>
         <Nullable>disable</Nullable>
 
-        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-        <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-        <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
-<!--
-        <SelfContained>true</SelfContained>
-        <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-        <PublishTrimmed>true</PublishTrimmed>
-        <PublishAot>true</PublishAot>
--->
         
         <Company>Jannesen B.V.</Company>
         <Version>1.11.00.000</Version>
         <Authors>Peter Jannesen</Authors>
     </PropertyGroup>
-<!--
+
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
         <EnableNETAnalyzers>true</EnableNETAnalyzers>
         <AnalysisLevel>latest</AnalysisLevel>
@@ -33,7 +24,7 @@
         <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
         <WarningLevel>4</WarningLevel>
     </PropertyGroup>
--->
+
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
         <DebugSymbols>true</DebugSymbols>
         <DebugType>full</DebugType>

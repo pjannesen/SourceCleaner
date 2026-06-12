@@ -1,18 +1,18 @@
 root = true
 
 [*.{cs,ttsql,sql,ts,tsx,js,css,scss,json,xml}]
-end_of_line              = lf
-charset                  = utf-8
-indent_style             = space
-indent_size              = 4
+end_of_line = lf
+charset = utf-8
+indent_style = space
+indent_size = 4
 trim_trailing_whitespace = true
 
 [*.cs]
-# IDE1006: Naming Styles
-#dotnet_diagnostic.IDE1006.severity = none
+charset = utf-8-bom
 
-# CA1014: Mark assemblies with CLSCompliant
-#dotnet_diagnostic.CA1014.severity = none
+[*.cs]
+# IDE1006: Naming Styles
+dotnet_diagnostic.IDE1006.severity = none
 
 # CA1031: Do not catch general exception types
 dotnet_diagnostic.CA1031.severity = none
